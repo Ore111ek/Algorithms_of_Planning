@@ -37,6 +37,9 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Выбор алгоритма</string>
         </property>
@@ -50,9 +53,15 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>250</width>
+          <height>0</height>
+         </size>
+        </property>
         <item>
          <property name="text">
-          <string>FIFO</string>
+          <string>Первым пришёл - первым обслужен</string>
          </property>
         </item>
         <item>
@@ -100,17 +109,20 @@
 border: 1px solid rgb(0, 122, 217);
 }</string>
       </property>
-      <widget class="QLabel" name="axisXLabel">
+      <widget class="QSlider" name="queueSlider">
        <property name="geometry">
         <rect>
-         <x>1110</x>
-         <y>400</y>
-         <width>71</width>
-         <height>21</height>
+         <x>412</x>
+         <y>40</y>
+         <width>22</width>
+         <height>522</height>
         </rect>
        </property>
-       <property name="text">
-        <string>Время</string>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
        </property>
       </widget>
      </widget>
@@ -217,14 +229,6 @@ border: 1px solid rgb(0, 122, 217);
      <height>26</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
