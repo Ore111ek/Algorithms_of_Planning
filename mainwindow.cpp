@@ -21,6 +21,12 @@ void Process::draw(/*QColor col*/){
     painter->drawRect(x, y, length, height);
     painter->drawText(QRect(x, y, length, height),name,(QTextOption)Qt::AlignCenter);
 }
+void Process::drawShadow(){
+    painter->fillRect(x, y, startlength, height, QBrush(color));
+    painter->setPen(/*col*/Qt::lightGray);
+    painter->drawRect(x, y, startlength, height);
+    painter->setPen(/*col*/Qt::black);
+}
 /*
 void Process::show(){
     draw();
@@ -49,12 +55,14 @@ int Process::getHeight(){ return height; }
 QString Process::getName(){ return name; }
 int Process::getNumber(){ return number; }
 int Process::getPriority(){ return priority; }
+QColor Process::getColor(){ return color; }
 
 void Process::setX(int ax){ x = ax; }
 void Process::setY(int ay){ y = ay; }
 void Process::setLength(int len){ length = len; }
 void Process::setPainter(QPainter *paint){ painter = paint; }
 void Process::setNumber(int num){ number = num; }
+void Process::setColor(QColor col){ color = col; }
 
 int Area::getOriginX(){ return originX; }
 int Area::getOriginY(){ return originY; }
@@ -74,7 +82,7 @@ Queue::~Queue(){}
 
 void Queue::drawLabel(){
     painter->fillRect(originX, originY - heightY - 40, lengthX, 40, QBrush(QColor(255,255,255)));//Закрасить белым над областью, на месте лейбла
-    painter->drawText(QRect(originX, originY - heightY - 40, lengthX, 40),"Очередь",(QTextOption)Qt::AlignCenter);
+    painter->drawText(QRect(originX, originY - heightY - 20, lengthX, 20),"Очередь",(QTextOption)Qt::AlignCenter);
     painter->fillRect(originX, originY, lengthX, 40, QBrush(QColor(255,255,255)));//Закрасить белым над областью, на месте лейбла
     painter->drawRect(originX, originY - heightY, lengthX, heightY); //Рамка области
 }
@@ -124,6 +132,12 @@ void Queue::addProcess(Process proc){
     sort();
 }
 Process Queue::findProcess(){
+    Process proc = processes[0];
+    processes.erase(processes.begin());
+    return proc;
+}
+bool Queue::empty(){
+    return (processes.size() == 0);
 }
 
 int Queue::getStepY(){ return stepY; }
@@ -132,28 +146,66 @@ void Queue::setSlider(QSlider *sl){ slider = sl; }
 void Queue::setSorting(QComboBox *sort){ sorting = sort; }
 
 
-ExecutionBar::ExecutionBar(int aoriginX, int aoriginY,
+ExecutionBar::ExecutionBar(Queue *q, int aoriginX, int aoriginY,
              int alengthX, int aheightY){
     originX = aoriginX; originY = aoriginY;
     lengthX = alengthX; heightY = aheightY;
+    queue = q;
 }
 ExecutionBar::~ExecutionBar(){}
 void ExecutionBar::drawLabel(){
     painter->drawText(QRect(originX, originY - heightY - 30, lengthX, 30),"Выполняемые процессы",(QTextOption)Qt::AlignCenter);
-    painter->drawRect(originX, originY - heightY, lengthX, heightY);
+    //painter->drawRect(originX, originY - heightY, lengthX, heightY);
 }
 void ExecutionBar::draw(){
+    int margin = slider->value()*endX/100;
     for(auto process: processes){
-
+        process.setX(process.getX() - margin);
+        if(process.getX() + process.getLength() > originX && process.getX() < originX + lengthX){
+            process.setPainter(painter);
+            process.drawShadow();
+            process.draw();
+        }
+        process.setX(process.getX() + margin);
+    }
+    if(!waiting && processes.size()>0){
+        int last = processes.size()-1;
+        processes[last].setLength(processes[last].getLength()+1);
+        if(processes[last].getLength() >= processes[last].getStartLength()){//Изменить. Скорее всего отдельную функцию определения, когда next процесс
+            endX += processes[last].getLength();
+            requestForNext();
+        }
+    }
+    else{
+        requestForNext();
     }
     drawLabel();
 }
 void ExecutionBar::requestForNext(){
+    if(!queue->empty()){
+        clear();
+        Process nextPr = queue->findProcess();
+        nextPr.setX(originX + endX);
+        nextPr.setY(originY - heightY);
+        nextPr.setLength(0);
+        processes.push_back(nextPr);
 
+        waiting = false;
+    }else{
+        waiting = true;
+        if(processes.size()>0)
+            endX += 1;
+    }
 }
 void ExecutionBar::clear(){
-
+    if(processes.size()>20){
+        endX = 0;
+        for(int i = 19; i > -1; i--){
+            processes.erase(processes.begin() + i);
+        }
+    }
 }
+void ExecutionBar::setSlider(QSlider *sl){ slider = sl; }
 
 Graph::Graph(Queue *q, int aoriginX, int aoriginY,
              int alengthX, int aheightY, int astepY){
@@ -189,23 +241,46 @@ void Graph::draw(){
     }
 }
 
-void Graph::sendToQueue(Process proc){
-    queue->addProcess(proc);
+void Graph::sendToQueue(){//Удалить параметр
+    queue->addProcess(processes[0]);
     processes.erase(processes.begin());
 }
 
+//void Graph::sendToQueue(Process proc){
+//    queue->addProcess(proc);
+//    processes.erase(processes.begin());
+//}
+
 void Graph::update(int dx){
     drawAxis();
+    if(processes.size() > 0 && processes[0].getX()<originX - dx + 1){
+        //process.drawShadow();
+        sendToQueue();//удалить параметр функции
+    }
     for(auto &process: processes){
-        if(process.getX()<originX + dx){
-            sendToQueue(process);
-        }
-        else{
-            process.setPainter(painter);
-            process.move(dx,0);
-        }
+
+        process.setPainter(painter);
+        process.move(dx,0);
+        if(process.getX() + process.getLength() > originX + lengthX)
+            process.drawShadow();
     }
 }
+
+//void Graph::update(int dx){
+//    drawAxis();
+//    for(auto &process: processes){
+//        if(process.getX()<originX - dx + 1){
+//            //process.drawShadow();
+//            sendToQueue(process);
+//        }
+//        else{
+//            process.setPainter(painter);
+//            process.move(dx,0);
+//            if(process.getX() + process.getLength() > originX + lengthX)
+//                process.drawShadow();
+//        }
+//    }
+//}
 
 void Graph::createProcess(QString name, int len, int height, QColor col){
     bool free = false;
@@ -236,16 +311,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    bar = new ExecutionBar;
     queue = new Queue();
     queue->setSlider(ui->queueSlider);
     queue->setSorting(ui->algorithmBox);
     graph = new Graph(queue);
+    bar = new ExecutionBar(queue);
+    bar->setSlider(ui->barSlider);
     //proc = new Process("П1", 1000, 120, 100);
     //update();
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerActivation()));
-    timer->start(10);
+    timer->start(20);
 }
 
 void MainWindow::paintEvent(QPaintEvent *event){
@@ -266,7 +342,7 @@ void MainWindow::paintEvent(QPaintEvent *event){
         // proc->move(-1,0);
 
         queue->draw();
-        bar->drawLabel();
+        bar->draw();
          graph->update(-1);
          if(rand()%200 + 198 < 200){
              count++;
@@ -282,7 +358,6 @@ void MainWindow::paintEvent(QPaintEvent *event){
 
 void MainWindow::timerActivation()
 {
-    ui->labelSpeed->setText(QTime::currentTime().toString("hh:mm:ss"));
     timeFlag = true;
     this->repaint();
     timeFlag = false;
@@ -301,4 +376,23 @@ MainWindow::~MainWindow()
 void MainWindow::on_algorithmBox_currentTextChanged(const QString &arg1)
 {
     queue->sort();
+}
+
+void MainWindow::on_speedSlider_valueChanged(int value)
+{
+    timer->setInterval(value);
+}
+
+void MainWindow::on_startButton_clicked()
+{
+    if(timer->isActive())
+        timer->stop();
+    else {
+        timer->start(ui->speedSlider->value());
+    }
+}
+
+void MainWindow::on_barSlider_sliderMoved(int position)
+{
+    bar->draw();
 }
