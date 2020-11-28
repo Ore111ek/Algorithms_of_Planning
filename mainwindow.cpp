@@ -2,13 +2,14 @@
 #include "ui_mainwindow.h"
 #include <QTime>
 
-Process::Process(QString aname, int ax, int ay, int alength, int aheight, QColor acolor){
+Process::Process(QString aname, int ax, int ay, int alength, int priory, int aheight, QColor acolor){
     x = ax;
     y = ay;
     length = startlength = alength;
     height = aheight;
     color = acolor;
     name = aname;
+    priority = priory;
 }
 
 Process::~Process(){
@@ -46,12 +47,14 @@ int Process::getLength(){ return length; }
 int Process::getStartLength(){ return startlength; }
 int Process::getHeight(){ return height; }
 QString Process::getName(){ return name; }
+int Process::getNumber(){ return number; }
+int Process::getPriority(){ return priority; }
 
 void Process::setX(int ax){ x = ax; }
 void Process::setY(int ay){ y = ay; }
 void Process::setLength(int len){ length = len; }
 void Process::setPainter(QPainter *paint){ painter = paint; }
-
+void Process::setNumber(int num){ number = num; }
 
 int Area::getOriginX(){ return originX; }
 int Area::getOriginY(){ return originY; }
@@ -64,7 +67,7 @@ Queue::Queue(int aoriginX, int aoriginY,
              int alengthX, int aheightY, int astepY){
     originX = aoriginX; originY = aoriginY;
     lengthX = alengthX; heightY = aheightY;
-    stepY = astepY;
+    stepY = astepY; lastNumber = 0;
 }
 
 Queue::~Queue(){}
@@ -76,7 +79,6 @@ void Queue::drawLabel(){
     painter->drawRect(originX, originY - heightY, lengthX, heightY); //Рамка области
 }
 void Queue::draw(){
-
     int y = originY - 35;
     int heightOfAll = 0;
     for(auto &process : processes){
@@ -97,15 +99,27 @@ void Queue::draw(){
          y -= stepY;
     }
     drawLabel();
-
+}
+bool Queue::greater(Process pr1, Process pr2){
+    if(sorting->currentText() == "Первым пришёл - первым обслужен" || sorting->currentText() == "Циклическое планирование")
+        return pr1.getNumber() > pr2.getNumber();
+    if(sorting->currentText() == "Краткосрочное планирование" || sorting->currentText() == "Наименьшее оставшееся время")
+        return pr1.getLength() > pr2.getLength();
+    if(sorting->currentText() == "Приоритетное планирование")
+        return pr1.getPriority() > pr2.getPriority();
 }
 void Queue::sort(){
-    if(sorting->currentText() == "Краткосрочное планирование"){
-
+    for(int i = 1; i < (int)processes.size(); i++){
+            for(int j = i; j > 0 && greater(processes[j-1], processes[j]); j--){
+                Process tmp = processes[j-1];
+                processes[j-1] = processes[j];
+                processes[j] = tmp;
+            }
     }
-
 }
 void Queue::addProcess(Process proc){
+    lastNumber++;
+    proc.setNumber(lastNumber);
     processes.push_back(proc);
     sort();
 }
@@ -113,7 +127,6 @@ Process Queue::findProcess(){
 }
 
 int Queue::getStepY(){ return stepY; }
-
 void Queue::setStepY(int step){ stepY = step; }
 void Queue::setSlider(QSlider *sl){ slider = sl; }
 void Queue::setSorting(QComboBox *sort){ sorting = sort; }
@@ -130,7 +143,10 @@ void ExecutionBar::drawLabel(){
     painter->drawRect(originX, originY - heightY, lengthX, heightY);
 }
 void ExecutionBar::draw(){
+    for(auto process: processes){
 
+    }
+    drawLabel();
 }
 void ExecutionBar::requestForNext(){
 
@@ -157,7 +173,7 @@ void Graph::drawAxis(){
     painter->drawLine(originX + lengthX, originY+1, originX + lengthX - 15, originY + 5);
     painter->drawLine(originX, originY - heightY, originX - 5, originY - heightY + 15);
     painter->drawLine(originX, originY - heightY, originX + 5, originY - heightY + 15);
-    /*
+/*
         for(int i = stepY; i < heightY; i+=stepY){
             painter->setPen(Qt::gray);
             painter->drawLine(originX, originY - i, originX + lengthX, originY - i);
@@ -201,7 +217,7 @@ void Graph::createProcess(QString name, int len, int height, QColor col){
                 free = false;
         }
         if(free){
-             processes.push_back(Process(name, originX + lengthX, y, len, height, col));
+             processes.push_back(Process(name, originX + lengthX, y, len, 1, height, col));
              processes[processes.size()-1].setPainter(painter);
              processes[processes.size()-1].draw();
         }
@@ -209,16 +225,8 @@ void Graph::createProcess(QString name, int len, int height, QColor col){
     }
 }
 
-
-
-//int Graph::getOriginX(){ return originX; }
-//int Graph::getOriginY(){ return originY; }
-//int Graph::getLengthX(){ return lengthX; }
-//int Graph::getHeightY(){ return heightY; }
 int Graph::getStepY(){ return stepY; }
-
 void Graph::setStepY(int step){ stepY = step; }
-//void Graph::setPainter(QPainter *paint){ painter = paint; }
 
 
 
@@ -288,4 +296,9 @@ MainWindow::~MainWindow()
     delete graph;
     delete queue;
     delete bar;
+}
+
+void MainWindow::on_algorithmBox_currentTextChanged(const QString &arg1)
+{
+    queue->sort();
 }

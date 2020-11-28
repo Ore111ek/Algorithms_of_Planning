@@ -79,6 +79,11 @@
           <string>Циклическое планирование</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Приоритетное планирование</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item>

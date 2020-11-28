@@ -12,7 +12,7 @@
 class Process{
   public:
     Process(QString aname = "", int ax = 0, int ay = 0,
-            int alength = 100, int aheight = 25, QColor acolor = QColor(0,180,0,120));
+            int alength = 100, int priory = 1, int aheight = 25, QColor acolor = QColor(0,180,0,120));
     ~Process();
     //void hide();
     void draw(/*QColor col = Qt::black*/);
@@ -26,16 +26,21 @@ class Process{
     int getStartLength();
     int getHeight();
     QString getName();
+    int getNumber();
+    int getPriority();
 
     void setX(int ax);
     void setY(int ay);
     void setLength(int len);
     void setPainter(QPainter *paint);
+    void setNumber(int num);
   private:
     int x, y;
     int length;
     int startlength;
     int height;
+    int priority;
+    int number;
     //int status;
     QString name;
     QColor color;
@@ -76,6 +81,7 @@ public:
   void drawLabel();
   void draw();
   void sort();
+  bool greater(Process pr1, Process pr2);
   void addProcess(Process proc);
   Process findProcess();
 
@@ -86,6 +92,7 @@ public:
   void setSorting(QComboBox *sort);
 private:
   int stepY;
+  int lastNumber = 0;
   QSlider *slider;
   QComboBox *sorting;
 };
@@ -155,6 +162,8 @@ public:
 private slots:
     void paintEvent(QPaintEvent *event);
     void timerActivation();
+
+    void on_algorithmBox_currentTextChanged(const QString &arg1);
 
 private:
     Ui::MainWindow *ui;
