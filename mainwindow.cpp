@@ -73,7 +73,7 @@ void Queue::drawLabel(){
 void Queue::draw(){
     int y = originY - 35;
     int heightOfAll = 0;
-    for(auto &process : processes){
+    for(auto process : processes){
         heightOfAll += stepY;
     }
     int space = heightOfAll - heightY;
@@ -156,7 +156,7 @@ void ExecutionBar::draw(){
     }
 }
 bool ExecutionBar::enough(){
-    int last = (int)processes.size()-1;
+    auto last = processes.size()-1;
     if(processes[last].getLength() >= processes[last].getStartLength())
         return true;
     if(alg == "Первым пришёл - первым обслужен" || alg == "Краткосрочное планирование"){}
@@ -167,11 +167,12 @@ bool ExecutionBar::enough(){
         int curlen = processes[last].getStartLength() - processes[last].getLength();
         return (queue->firstProcess().getLength() < curlen);
     }
+    return false;
 }
 void ExecutionBar::update(int dx){
     draw();
     if(!waiting && (int)processes.size()>0){
-        int last = (int)processes.size()-1;
+        auto last = processes.size()-1;
         processes[last].setLength(processes[last].getLength()+dx);
         if(enough()){//Изменить. Скорее всего отдельную функцию определения, когда next процесс
             endX += processes[last].getLength();
@@ -201,8 +202,8 @@ void ExecutionBar::requestForNext(){
         waiting = false;
     }else{
         waiting = true;
-        if(processes.size()>0)
-            endX += 1;
+        //if(processes.size()>0) Пропуски в отсутствие процессов
+          //  endX += 1;
     }
 }
 void ExecutionBar::clear(){
@@ -328,7 +329,7 @@ void MainWindow::paintEvent(QPaintEvent *event){
     int xzero = 11;
     int yzero = 40;
     int width = 1208;
-    int height = 675;
+    int height = 525;
     painter->fillRect(xzero,yzero,width,height, QBrush(QColor(255,255,255)));
     painter->setPen(Qt::black);
     if(timeFlag){
@@ -337,7 +338,7 @@ void MainWindow::paintEvent(QPaintEvent *event){
         queue->draw();
         bar->update(1);
          graph->update(-1);
-         if(rand()%200 + 198 < 200){
+         if(rand()%200 + 200 - ui->frequencySlider->value() < 200){
              count++;
             graph->createProcess("П" + QString::number(count),rand()%170 + 25, 25, QColor(rand()%156+100,rand()%156+100,rand()%156+100,120));
          }

@@ -66,8 +66,8 @@ protected:
 
 class Queue : public Area{
 public:
-  Queue(int aoriginX = 30, int aoriginY = 610,
-          int alengthX = 385, int aheightY = 550, int astepY = 40);
+  Queue(int aoriginX = 30, int aoriginY = 460,
+          int alengthX = 385, int aheightY = 400, int astepY = 40);
   ~Queue();
   void drawLabel();
   void draw();
@@ -94,8 +94,8 @@ private:
 
 class Graph : public Area{
 public:
-  Graph(Queue *q, int aoriginX = 450, int aoriginY = 610,
-          int alengthX = 740, int aheightY = 550, int astepY = 40);
+  Graph(Queue *q, int aoriginX = 450, int aoriginY = 460,
+          int alengthX = 740, int aheightY = 400, int astepY = 40);
   ~Graph();
   void drawAxis();
   void draw();
@@ -113,7 +113,7 @@ private:
 
 class ExecutionBar : public Area{
 public:
-    ExecutionBar(Queue *q, int aoriginX = 30, int aoriginY = 700,
+    ExecutionBar(Queue *q, int aoriginX = 30, int aoriginY = 550,
             int alengthX = 1170, int aheightY = 50);
     ~ExecutionBar();
     void drawLabel();
