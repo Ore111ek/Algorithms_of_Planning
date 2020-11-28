@@ -12,7 +12,7 @@
 class Process{
   public:
     Process(QString aname = "", int ax = 0, int ay = 0,
-            int alength = 100, int priory = 1, int aheight = 25, QColor acolor = QColor(0,180,0,120));
+            int alength = 100, int aheight = 25, QColor acolor = QColor(0,180,0,120));
     ~Process();
     //void hide();
     void draw(/*QColor col = Qt::black*/);
@@ -28,7 +28,6 @@ class Process{
     int getHeight();
     QString getName();
     int getNumber();
-    int getPriority();
     QColor getColor();
 
     void setX(int ax);
@@ -37,12 +36,12 @@ class Process{
     void setPainter(QPainter *paint);
     void setNumber(int num);
     void setColor(QColor col);
+    void setStartLength(int len);
   private:
     int x, y;
     int length;
     int startlength;
     int height;
-    int priority;
     int number;
     //int status;
     QString name;
@@ -67,8 +66,8 @@ protected:
 
 class Queue : public Area{
 public:
-  Queue(int aoriginX = 30, int aoriginY = 580,
-          int alengthX = 385, int aheightY = 520, int astepY = 40);
+  Queue(int aoriginX = 30, int aoriginY = 610,
+          int alengthX = 385, int aheightY = 550, int astepY = 40);
   ~Queue();
   void drawLabel();
   void draw();
@@ -76,26 +75,27 @@ public:
   bool greater(Process pr1, Process pr2);
   void addProcess(Process proc);
   Process findProcess();
+  Process firstProcess();
   bool empty();
 
   int getStepY();
 
   void setStepY(int step);
-  void setSlider(QSlider *sl);
-  void setSorting(QComboBox *sort);
+  void setSlider(int sl);
+  void setSorting(QString sort);
 private:
   int stepY;
   int lastNumber = 0;
-  QSlider *slider;
-  QComboBox *sorting;
+  int slider;
+  QString sorting;
   Area *bar;
   bool waiting = true;
 };
 
 class Graph : public Area{
 public:
-  Graph(Queue *q, int aoriginX = 450, int aoriginY = 580,
-          int alengthX = 740, int aheightY = 520, int astepY = 40);
+  Graph(Queue *q, int aoriginX = 450, int aoriginY = 610,
+          int alengthX = 740, int aheightY = 550, int astepY = 40);
   ~Graph();
   void drawAxis();
   void draw();
@@ -113,18 +113,24 @@ private:
 
 class ExecutionBar : public Area{
 public:
-    ExecutionBar(Queue *q, int aoriginX = 30, int aoriginY = 670,
+    ExecutionBar(Queue *q, int aoriginX = 30, int aoriginY = 700,
             int alengthX = 1170, int aheightY = 50);
     ~ExecutionBar();
     void drawLabel();
     void draw();
+    void update(int dx);
     void requestForNext();
     void clear();
-    void setSlider(QSlider *sl);
+    bool enough();
+    void setSlider(int sl);
+    void setAlg(QString a);
+    void setQuantum(int q);
 private:
     Queue *queue;
-    QSlider *slider;
+    int slider;
+    QString alg;
     int endX = 0;
+    int quantum = 20;
     bool waiting = true;
 };
 
@@ -150,6 +156,10 @@ private slots:
     void on_startButton_clicked();
 
     void on_barSlider_sliderMoved(int position);
+
+    void on_queueSlider_valueChanged(int value);
+
+    void on_spinBox_valueChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;

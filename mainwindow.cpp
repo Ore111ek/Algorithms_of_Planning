@@ -2,14 +2,13 @@
 #include "ui_mainwindow.h"
 #include <QTime>
 
-Process::Process(QString aname, int ax, int ay, int alength, int priory, int aheight, QColor acolor){
+Process::Process(QString aname, int ax, int ay, int alength, int aheight, QColor acolor){
     x = ax;
     y = ay;
     length = startlength = alength;
     height = aheight;
     color = acolor;
     name = aname;
-    priority = priory;
 }
 
 Process::~Process(){
@@ -27,23 +26,9 @@ void Process::drawShadow(){
     painter->drawRect(x, y, startlength, height);
     painter->setPen(/*col*/Qt::black);
 }
-/*
-void Process::show(){
-    draw();
-}
-
-void Process::hide(){
-    QColor col = color;
-    color = QColor(255,255,255,0);
-    draw(color);
-    color = col;
-}*/
-
 void Process::move(int dx, int dy){
-    //hide();
     x += dx;
     y += dy;
-    //show();
     draw();
 }
 
@@ -54,7 +39,6 @@ int Process::getStartLength(){ return startlength; }
 int Process::getHeight(){ return height; }
 QString Process::getName(){ return name; }
 int Process::getNumber(){ return number; }
-int Process::getPriority(){ return priority; }
 QColor Process::getColor(){ return color; }
 
 void Process::setX(int ax){ x = ax; }
@@ -63,13 +47,13 @@ void Process::setLength(int len){ length = len; }
 void Process::setPainter(QPainter *paint){ painter = paint; }
 void Process::setNumber(int num){ number = num; }
 void Process::setColor(QColor col){ color = col; }
+void Process::setStartLength(int len){ startlength = len; }
 
 int Area::getOriginX(){ return originX; }
 int Area::getOriginY(){ return originY; }
 int Area::getLengthX(){ return lengthX; }
 int Area::getHeightY(){ return heightY; }
 void Area::setPainter(QPainter *paint){ painter = paint; }
-
 
 Queue::Queue(int aoriginX, int aoriginY,
              int alengthX, int aheightY, int astepY){
@@ -93,7 +77,7 @@ void Queue::draw(){
         heightOfAll += stepY;
     }
     int space = heightOfAll - heightY;
-    int margin = slider->value()*space/100;
+    int margin = slider*space/100;
     for(auto &process : processes){
 
         if(y > (originY - heightY - margin - process.getHeight()) && y < originY - margin/* - process.getHeight()*/){
@@ -109,12 +93,10 @@ void Queue::draw(){
     drawLabel();
 }
 bool Queue::greater(Process pr1, Process pr2){
-    if(sorting->currentText() == "Первым пришёл - первым обслужен" || sorting->currentText() == "Циклическое планирование")
+    if(sorting == "Первым пришёл - первым обслужен" || sorting == "Циклическое планирование")
         return pr1.getNumber() > pr2.getNumber();
-    if(sorting->currentText() == "Краткосрочное планирование" || sorting->currentText() == "Наименьшее оставшееся время")
+    if(sorting == "Краткосрочное планирование" || sorting == "Наименьшее оставшееся время")
         return pr1.getLength() > pr2.getLength();
-    if(sorting->currentText() == "Приоритетное планирование")
-        return pr1.getPriority() > pr2.getPriority();
 }
 void Queue::sort(){
     for(int i = 1; i < (int)processes.size(); i++){
@@ -136,14 +118,17 @@ Process Queue::findProcess(){
     processes.erase(processes.begin());
     return proc;
 }
+Process Queue::firstProcess(){
+    return processes[0];
+}
 bool Queue::empty(){
     return (processes.size() == 0);
 }
 
 int Queue::getStepY(){ return stepY; }
 void Queue::setStepY(int step){ stepY = step; }
-void Queue::setSlider(QSlider *sl){ slider = sl; }
-void Queue::setSorting(QComboBox *sort){ sorting = sort; }
+void Queue::setSlider(int sl){ slider = sl; }
+void Queue::setSorting(QString sort){ sorting = sort; }
 
 
 ExecutionBar::ExecutionBar(Queue *q, int aoriginX, int aoriginY,
@@ -158,28 +143,51 @@ void ExecutionBar::drawLabel(){
     //painter->drawRect(originX, originY - heightY, lengthX, heightY);
 }
 void ExecutionBar::draw(){
-    int margin = slider->value()*endX/100;
+    drawLabel();
+    int margin = slider*endX/100;
     for(auto process: processes){
         process.setX(process.getX() - margin);
-        if(process.getX() + process.getLength() > originX && process.getX() < originX + lengthX){
+        if(process.getX() + process.getLength() > originX - 20 && process.getX() < originX + lengthX){
             process.setPainter(painter);
             process.drawShadow();
             process.draw();
         }
         process.setX(process.getX() + margin);
     }
-    if(!waiting && processes.size()>0){
-        int last = processes.size()-1;
-        processes[last].setLength(processes[last].getLength()+1);
-        if(processes[last].getLength() >= processes[last].getStartLength()){//Изменить. Скорее всего отдельную функцию определения, когда next процесс
+}
+bool ExecutionBar::enough(){
+    int last = (int)processes.size()-1;
+    if(processes[last].getLength() >= processes[last].getStartLength())
+        return true;
+    if(alg == "Первым пришёл - первым обслужен" || alg == "Краткосрочное планирование"){}
+    if(alg == "Циклическое планирование"){
+        return processes[last].getLength() >= quantum;
+    }
+    if(alg == "Наименьшее оставшееся время" && !queue->empty()){
+        int curlen = processes[last].getStartLength() - processes[last].getLength();
+        return (queue->firstProcess().getLength() < curlen);
+    }
+}
+void ExecutionBar::update(int dx){
+    draw();
+    if(!waiting && (int)processes.size()>0){
+        int last = (int)processes.size()-1;
+        processes[last].setLength(processes[last].getLength()+dx);
+        if(enough()){//Изменить. Скорее всего отдельную функцию определения, когда next процесс
             endX += processes[last].getLength();
+            if((alg == "Циклическое планирование" || alg == "Наименьшее оставшееся время") && processes[last].getLength() < processes[last].getStartLength()){
+                Process proc = processes[last];
+                proc.setLength(proc.getStartLength()-proc.getLength());
+                proc.setStartLength(proc.getLength());
+                queue->addProcess(proc);
+                processes[last].setStartLength(processes[last].getLength());
+            }
             requestForNext();
         }
     }
     else{
         requestForNext();
     }
-    drawLabel();
 }
 void ExecutionBar::requestForNext(){
     if(!queue->empty()){
@@ -198,14 +206,16 @@ void ExecutionBar::requestForNext(){
     }
 }
 void ExecutionBar::clear(){
-    if(processes.size()>20){
+    if(processes.size()>99){
         endX = 0;
-        for(int i = 19; i > -1; i--){
+        for(int i = 99; i > -1; i--){
             processes.erase(processes.begin() + i);
         }
     }
 }
-void ExecutionBar::setSlider(QSlider *sl){ slider = sl; }
+void ExecutionBar::setSlider(int sl){ slider = sl; }
+void ExecutionBar::setAlg(QString a){ alg = a; }
+void ExecutionBar::setQuantum(int q){ quantum = q; }
 
 Graph::Graph(Queue *q, int aoriginX, int aoriginY,
              int alengthX, int aheightY, int astepY){
@@ -238,6 +248,8 @@ void Graph::draw(){
     for(auto &process: processes){
         process.setPainter(painter);
         process.draw();
+        if(process.getX() + process.getLength() > originX + lengthX)
+            process.drawShadow();
     }
 }
 
@@ -245,11 +257,6 @@ void Graph::sendToQueue(){//Удалить параметр
     queue->addProcess(processes[0]);
     processes.erase(processes.begin());
 }
-
-//void Graph::sendToQueue(Process proc){
-//    queue->addProcess(proc);
-//    processes.erase(processes.begin());
-//}
 
 void Graph::update(int dx){
     drawAxis();
@@ -266,22 +273,6 @@ void Graph::update(int dx){
     }
 }
 
-//void Graph::update(int dx){
-//    drawAxis();
-//    for(auto &process: processes){
-//        if(process.getX()<originX - dx + 1){
-//            //process.drawShadow();
-//            sendToQueue(process);
-//        }
-//        else{
-//            process.setPainter(painter);
-//            process.move(dx,0);
-//            if(process.getX() + process.getLength() > originX + lengthX)
-//                process.drawShadow();
-//        }
-//    }
-//}
-
 void Graph::createProcess(QString name, int len, int height, QColor col){
     bool free = false;
     int y = originY - stepY;
@@ -292,9 +283,9 @@ void Graph::createProcess(QString name, int len, int height, QColor col){
                 free = false;
         }
         if(free){
-             processes.push_back(Process(name, originX + lengthX, y, len, 1, height, col));
+             processes.push_back(Process(name, originX + lengthX, y, len, height, col));
              processes[processes.size()-1].setPainter(painter);
-             processes[processes.size()-1].draw();
+             processes[processes.size()-1].drawShadow();
         }
         y -= stepY;
     }
@@ -312,11 +303,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     queue = new Queue();
-    queue->setSlider(ui->queueSlider);
-    queue->setSorting(ui->algorithmBox);
+    queue->setSlider(ui->queueSlider->value());
+    queue->setSorting(ui->algorithmBox->currentText());
     graph = new Graph(queue);
     bar = new ExecutionBar(queue);
-    bar->setSlider(ui->barSlider);
+    bar->setAlg(ui->algorithmBox->currentText());
+    bar->setSlider(ui->barSlider->value());
+    bar->setQuantum(30);
     //proc = new Process("П1", 1000, 120, 100);
     //update();
     timer = new QTimer();
@@ -335,19 +328,24 @@ void MainWindow::paintEvent(QPaintEvent *event){
     int xzero = 11;
     int yzero = 40;
     int width = 1208;
-    int height = 650;
+    int height = 675;
     painter->fillRect(xzero,yzero,width,height, QBrush(QColor(255,255,255)));
     painter->setPen(Qt::black);
     if(timeFlag){
         // proc->move(-1,0);
 
         queue->draw();
-        bar->draw();
+        bar->update(1);
          graph->update(-1);
          if(rand()%200 + 198 < 200){
              count++;
             graph->createProcess("П" + QString::number(count),rand()%170 + 25, 25, QColor(rand()%156+100,rand()%156+100,rand()%156+100,120));
          }
+    }
+    else{
+        queue->draw();
+        bar->draw();
+        graph->draw();
     }
 
     painter->fillRect(0,0,xzero,height+yzero, QBrush(QColor("#f0f0f0")));
@@ -375,7 +373,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_algorithmBox_currentTextChanged(const QString &arg1)
 {
+    queue->setSorting(arg1);
     queue->sort();
+    bar->setAlg(arg1);
 }
 
 void MainWindow::on_speedSlider_valueChanged(int value)
@@ -394,5 +394,17 @@ void MainWindow::on_startButton_clicked()
 
 void MainWindow::on_barSlider_sliderMoved(int position)
 {
-    bar->draw();
+    bar->setSlider(position);
+    this->update();
+}
+
+void MainWindow::on_queueSlider_valueChanged(int value)
+{
+    queue->setSlider(value);
+    this->update();
+}
+
+void MainWindow::on_spinBox_valueChanged(int arg1)
+{
+    bar->setQuantum(arg1);
 }
