@@ -236,6 +236,12 @@ border: 1px solid rgb(0, 122, 217);
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
+        <property name="invertedAppearance">
+         <bool>true</bool>
+        </property>
+        <property name="invertedControls">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item>
