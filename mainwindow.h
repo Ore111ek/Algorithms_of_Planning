@@ -14,11 +14,9 @@ class Process{
     Process(QString aname = "", int ax = 0, int ay = 0,
             int alength = 100, int aheight = 25, QColor acolor = QColor(0,180,0,120));
     ~Process();
-    //void hide();
-    void draw(/*QColor col = Qt::black*/);
+
+    void draw();
     void drawShadow();
-    //void show(); //тоже самое, что и draw?
-    //void moveleft();
     void move(int dx, int dy);
 
     int getX();
@@ -43,7 +41,6 @@ class Process{
     int startlength;
     int height;
     int number;
-    //int status;
     QString name;
     QColor color;
     QPainter *painter;
@@ -51,6 +48,8 @@ class Process{
 
 class Area{
 public:
+  void restart();
+
   int getOriginX();
   int getOriginY();
   int getLengthX();
@@ -69,7 +68,7 @@ public:
   Queue(int aoriginX = 30, int aoriginY = 460,
           int alengthX = 385, int aheightY = 400, int astepY = 40);
   ~Queue();
-  void drawLabel();
+
   void draw();
   void sort();
   bool greater(Process pr1, Process pr2);
@@ -84,11 +83,12 @@ public:
   void setSlider(int sl);
   void setSorting(QString sort);
 private:
+  void drawLabel();
+
   int stepY;
   int lastNumber = 0;
   int slider;
   QString sorting;
-  Area *bar;
   bool waiting = true;
 };
 
@@ -97,7 +97,6 @@ public:
   Graph(Queue *q, int aoriginX = 450, int aoriginY = 460,
           int alengthX = 740, int aheightY = 400, int astepY = 40);
   ~Graph();
-  void drawAxis();
   void draw();
   void update(int dx);
   void createProcess(QString name = "", int len = 100, int height = 25, QColor col = QColor(0,180,0,120));
@@ -107,6 +106,7 @@ public:
 
   void setStepY(int step);
 private:
+  void drawAxis();
   int stepY;
   Queue *queue;
 };
@@ -116,7 +116,8 @@ public:
     ExecutionBar(Queue *q, int aoriginX = 30, int aoriginY = 550,
             int alengthX = 1170, int aheightY = 50);
     ~ExecutionBar();
-    void drawLabel();
+
+    void restart();
     void draw();
     void update(int dx);
     void requestForNext();
@@ -125,13 +126,23 @@ public:
     void setSlider(int sl);
     void setAlg(QString a);
     void setQuantum(int q);
+    void setDelay(int d);
 private:
+    void drawLabel();
+
     Queue *queue;
     int slider;
     QString alg;
     int endX = 0;
     int quantum = 20;
     bool waiting = true;
+
+    int delay = 0;
+    int remainingDelay = 0;
+
+    int usetime = 0;
+    int idletime = 0;
+    int delaytime = 0;
 };
 
 namespace Ui {
@@ -147,6 +158,7 @@ public:
     ~MainWindow();
 private slots:
     void paintEvent(QPaintEvent *event);
+
     void timerActivation();
 
     void on_algorithmBox_currentTextChanged(const QString &arg1);
@@ -159,7 +171,11 @@ private slots:
 
     void on_queueSlider_valueChanged(int value);
 
-    void on_spinBox_valueChanged(int arg1);
+    void on_quantSpin_valueChanged(int arg1);
+
+    void on_delaySpin_valueChanged(int arg1);
+
+    void on_restartButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -167,7 +183,6 @@ private:
     ExecutionBar * bar;
     Queue *queue;
     Graph *graph;
-    //Process *proc;
     QPainter *painter;
     bool timeFlag = false;
     long long count = 0;

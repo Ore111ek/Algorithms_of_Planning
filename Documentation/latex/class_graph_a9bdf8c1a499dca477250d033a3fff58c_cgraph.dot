@@ -1,0 +1,22 @@
+digraph "Graph::update"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="Graph::update",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="Graph::sendToQueue",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_graph.html#af9d0e40835fd62c5105168e131304fc7",tooltip=" "];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="Queue::addProcess",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_queue.html#a5e88de8378fd90f993c2c1215aad3c8c",tooltip=" "];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="Process::setNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_process.html#a5a089c9dfa69b8d0ca852c4ba041a65d",tooltip=" "];
+  Node3 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="Queue::sort",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_queue.html#a8ab5ad7b7ca9d706ff9918fcd7357da8",tooltip=" "];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="Queue::greater",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_queue.html#a76e251c2f6369620a476d04a52615fbb",tooltip=" "];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="Process::getLength",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_process.html#ab0f9faf8a0ca6a52172af89e64c76787",tooltip=" "];
+  Node6 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="Process::getNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_process.html#a5f781fe7313c21e4212f24339a03817c",tooltip=" "];
+}

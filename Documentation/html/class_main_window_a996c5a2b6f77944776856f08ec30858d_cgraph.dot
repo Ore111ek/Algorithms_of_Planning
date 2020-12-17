@@ -1,0 +1,26 @@
+digraph "MainWindow::MainWindow"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="MainWindow::MainWindow",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="ExecutionBar::setAlg",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_execution_bar.html#a1bd4691a5a493f3277d570c564d899c4",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="ExecutionBar::setQuantum",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_execution_bar.html#a1ae865940f92153fd0dff3eee7b5de99",tooltip=" "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="Queue::setSlider",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_queue.html#a4a1e60cacc66e59603dcbef9b92f84d8",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="ExecutionBar::setSlider",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_execution_bar.html#a2138e8b4c08e04805baabb4ba7e816ad",tooltip=" "];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="Queue::setSorting",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_queue.html#aeef3d1ac1300eeba553dc2095fb8ad4b",tooltip=" "];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="Queue::sort",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_queue.html#a8ab5ad7b7ca9d706ff9918fcd7357da8",tooltip=" "];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="Queue::greater",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_queue.html#a76e251c2f6369620a476d04a52615fbb",tooltip=" "];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="Process::getLength",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_process.html#ab0f9faf8a0ca6a52172af89e64c76787",tooltip=" "];
+  Node8 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="Process::getNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_process.html#a5f781fe7313c21e4212f24339a03817c",tooltip=" "];
+}

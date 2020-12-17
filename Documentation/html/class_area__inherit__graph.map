@@ -1,0 +1,6 @@
+<map id="Area" name="Area">
+<area shape="rect" id="node1" title=" " alt="" coords="171,5,277,229"/>
+<area shape="rect" id="node2" href="$class_execution_bar.html" title=" " alt="" coords="5,277,136,677"/>
+<area shape="rect" id="node3" href="$class_graph.html" title=" " alt="" coords="161,373,287,582"/>
+<area shape="rect" id="node4" href="$class_queue.html" title=" " alt="" coords="311,314,422,641"/>
+</map>

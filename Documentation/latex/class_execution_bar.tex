@@ -1,0 +1,142 @@
+\hypertarget{class_execution_bar}{}\doxysection{Класс Execution\+Bar}
+\label{class_execution_bar}\index{ExecutionBar@{ExecutionBar}}
+
+
+Граф наследования\+:Execution\+Bar\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_execution_bar__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Граф связей класса Execution\+Bar\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_execution_bar__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_execution_bar_a0f0849dbb9f2789c9818ce5a8ef94246}\label{class_execution_bar_a0f0849dbb9f2789c9818ce5a8ef94246}} 
+{\bfseries Execution\+Bar} (\mbox{\hyperlink{class_queue}{Queue}} $\ast$q, int aoriginX=30, int aoriginY=550, int alengthX=1170, int aheightY=50)
+\item 
+\mbox{\Hypertarget{class_execution_bar_a0bf7e809426ff4620c740d40e98b2041}\label{class_execution_bar_a0bf7e809426ff4620c740d40e98b2041}} 
+void {\bfseries restart} ()
+\item 
+\mbox{\Hypertarget{class_execution_bar_a7991e5cada67915c94c152eff5415856}\label{class_execution_bar_a7991e5cada67915c94c152eff5415856}} 
+void {\bfseries draw} ()
+\item 
+void \mbox{\hyperlink{class_execution_bar_a3b5f91b7ef8d954c691b651c17b44851}{update}} (int dx)
+\item 
+\mbox{\Hypertarget{class_execution_bar_a7de166c43d7b577e7bfc0d5eb8f70575}\label{class_execution_bar_a7de166c43d7b577e7bfc0d5eb8f70575}} 
+void {\bfseries request\+For\+Next} ()
+\item 
+\mbox{\Hypertarget{class_execution_bar_afff2a12637a9ca09cc6a68b4c6b861fc}\label{class_execution_bar_afff2a12637a9ca09cc6a68b4c6b861fc}} 
+void {\bfseries clear} ()
+\item 
+bool \mbox{\hyperlink{class_execution_bar_acbc1d9445e966585562c3a40cc5bfee2}{enough}} ()
+\item 
+\mbox{\Hypertarget{class_execution_bar_a2138e8b4c08e04805baabb4ba7e816ad}\label{class_execution_bar_a2138e8b4c08e04805baabb4ba7e816ad}} 
+void {\bfseries set\+Slider} (int sl)
+\item 
+\mbox{\Hypertarget{class_execution_bar_a1bd4691a5a493f3277d570c564d899c4}\label{class_execution_bar_a1bd4691a5a493f3277d570c564d899c4}} 
+void {\bfseries set\+Alg} (Q\+String a)
+\item 
+\mbox{\Hypertarget{class_execution_bar_a1ae865940f92153fd0dff3eee7b5de99}\label{class_execution_bar_a1ae865940f92153fd0dff3eee7b5de99}} 
+void {\bfseries set\+Quantum} (int q)
+\item 
+\mbox{\Hypertarget{class_execution_bar_a8dd5560ee138b9e9339a8546ffdec311}\label{class_execution_bar_a8dd5560ee138b9e9339a8546ffdec311}} 
+void {\bfseries set\+Delay} (int d)
+\end{DoxyCompactItemize}
+\doxysubsection*{Закрытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_execution_bar_a92dc3a7842cedb55738328cb4d3681c8}\label{class_execution_bar_a92dc3a7842cedb55738328cb4d3681c8}} 
+void {\bfseries draw\+Label} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_execution_bar_ae2e5a62a95a1f2121c3c28d4d71ed649}\label{class_execution_bar_ae2e5a62a95a1f2121c3c28d4d71ed649}} 
+\mbox{\hyperlink{class_queue}{Queue}} $\ast$ {\bfseries queue}
+\item 
+\mbox{\Hypertarget{class_execution_bar_a87c8711a7d028a3c0535c3113f356f09}\label{class_execution_bar_a87c8711a7d028a3c0535c3113f356f09}} 
+int {\bfseries slider}
+\item 
+\mbox{\Hypertarget{class_execution_bar_a99db0f6a203178e00e147e3fff8482fb}\label{class_execution_bar_a99db0f6a203178e00e147e3fff8482fb}} 
+Q\+String {\bfseries alg}
+\item 
+\mbox{\Hypertarget{class_execution_bar_ad5bace883be909f04963aaa8d3400f6b}\label{class_execution_bar_ad5bace883be909f04963aaa8d3400f6b}} 
+int {\bfseries endX} = 0
+\item 
+\mbox{\Hypertarget{class_execution_bar_a27b2f0736ae5a246df6a46d56f811c7f}\label{class_execution_bar_a27b2f0736ae5a246df6a46d56f811c7f}} 
+int {\bfseries quantum} = 20
+\item 
+\mbox{\Hypertarget{class_execution_bar_ae18299af7c0a82d5e1f1a2e97add568b}\label{class_execution_bar_ae18299af7c0a82d5e1f1a2e97add568b}} 
+bool {\bfseries waiting} = true
+\item 
+\mbox{\Hypertarget{class_execution_bar_a415101bd9ed326baafa96bbfa189490f}\label{class_execution_bar_a415101bd9ed326baafa96bbfa189490f}} 
+int {\bfseries delay} = 0
+\item 
+\mbox{\Hypertarget{class_execution_bar_ab4bb693db6363b622b4e603e3831ea2d}\label{class_execution_bar_ab4bb693db6363b622b4e603e3831ea2d}} 
+int {\bfseries remaining\+Delay} = 0
+\item 
+\mbox{\Hypertarget{class_execution_bar_a7b7bd0a7dfe5d124979aefaf359a1393}\label{class_execution_bar_a7b7bd0a7dfe5d124979aefaf359a1393}} 
+int {\bfseries usetime} = 0
+\item 
+\mbox{\Hypertarget{class_execution_bar_a9d7784fed48277cd54033173cd96ad04}\label{class_execution_bar_a9d7784fed48277cd54033173cd96ad04}} 
+int {\bfseries idletime} = 0
+\item 
+\mbox{\Hypertarget{class_execution_bar_a86bae783bb3334fa7977ed2c9ef774d5}\label{class_execution_bar_a86bae783bb3334fa7977ed2c9ef774d5}} 
+int {\bfseries delaytime} = 0
+\end{DoxyCompactItemize}
+\doxysubsection*{Дополнительные унаследованные члены}
+
+
+\doxysubsection{Методы}
+\mbox{\Hypertarget{class_execution_bar_acbc1d9445e966585562c3a40cc5bfee2}\label{class_execution_bar_acbc1d9445e966585562c3a40cc5bfee2}} 
+\index{ExecutionBar@{ExecutionBar}!enough@{enough}}
+\index{enough@{enough}!ExecutionBar@{ExecutionBar}}
+\doxysubsubsection{\texorpdfstring{enough()}{enough()}}
+{\footnotesize\ttfamily bool Execution\+Bar\+::enough (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Достаточно ли работать с текущим процессом?Граф вызовов\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=332pt]{class_execution_bar_acbc1d9445e966585562c3a40cc5bfee2_cgraph}
+\end{center}
+\end{figure}
+Граф вызова функции\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=339pt]{class_execution_bar_acbc1d9445e966585562c3a40cc5bfee2_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_execution_bar_a3b5f91b7ef8d954c691b651c17b44851}\label{class_execution_bar_a3b5f91b7ef8d954c691b651c17b44851}} 
+\index{ExecutionBar@{ExecutionBar}!update@{update}}
+\index{update@{update}!ExecutionBar@{ExecutionBar}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily void Execution\+Bar\+::update (\begin{DoxyParamCaption}\item[{int}]{dx }\end{DoxyParamCaption})}
+
+Обновить область после шага работы процессораГраф вызовов\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_execution_bar_a3b5f91b7ef8d954c691b651c17b44851_cgraph}
+\end{center}
+\end{figure}
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Dimitriy/\+Documents/\+Algorithms\+\_\+of\+\_\+\+Planning/mainwindow.\+h\item 
+C\+:/\+Users/\+Dimitriy/\+Documents/\+Algorithms\+\_\+of\+\_\+\+Planning/mainwindow.\+cpp\end{DoxyCompactItemize}

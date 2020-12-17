@@ -18,7 +18,7 @@ void Process::draw(/*QColor col*/){
     painter->fillRect(x, y, length, height, QBrush(color));
     painter->setPen(/*col*/Qt::black);
     painter->drawRect(x, y, length, height);
-    painter->drawText(QRect(x, y, length, height),name,(QTextOption)Qt::AlignCenter);
+    painter->drawText(QRect(x, y, length, height),name,static_cast<QTextOption>(Qt::AlignCenter));
 }
 void Process::drawShadow(){
     painter->fillRect(x, y, startlength, height, QBrush(color));
@@ -49,6 +49,9 @@ void Process::setNumber(int num){ number = num; }
 void Process::setColor(QColor col){ color = col; }
 void Process::setStartLength(int len){ startlength = len; }
 
+void Area::restart(){
+    processes.clear();
+}
 int Area::getOriginX(){ return originX; }
 int Area::getOriginY(){ return originY; }
 int Area::getLengthX(){ return lengthX; }
@@ -66,7 +69,7 @@ Queue::~Queue(){}
 
 void Queue::drawLabel(){
     painter->fillRect(originX, originY - heightY - 40, lengthX, 40, QBrush(QColor(255,255,255)));//Закрасить белым над областью, на месте лейбла
-    painter->drawText(QRect(originX, originY - heightY - 20, lengthX, 20),"Очередь",(QTextOption)Qt::AlignCenter);
+    painter->drawText(QRect(originX, originY - heightY - 20, lengthX, 20),"Очередь",static_cast<QTextOption>(Qt::AlignCenter));
     painter->fillRect(originX, originY, lengthX, 40, QBrush(QColor(255,255,255)));//Закрасить белым над областью, на месте лейбла
     painter->drawRect(originX, originY - heightY, lengthX, heightY); //Рамка области
 }
@@ -79,49 +82,47 @@ void Queue::draw(){
     int space = heightOfAll - heightY;
     int margin = slider*space/100;
     for(auto &process : processes){
-
-        if(y > (originY - heightY - margin - process.getHeight()) && y < originY - margin/* - process.getHeight()*/){
+        if(y > (originY - heightY - margin - process.getHeight()) && y < originY - margin){
             process.setPainter(painter);
-            //process.setX(originX+10);
             process.setX(originX + (lengthX - process.getLength())/2);
             process.setY(y + margin);
             process.draw();
-
         }
          y -= stepY;
     }
     drawLabel();
 }
-bool Queue::greater(Process pr1, Process pr2){
+bool Queue::greater(Process pr1, Process pr2){//!Операция сравнения в зависимости от алгоритма
     if(sorting == "Первым пришёл - первым обслужен" || sorting == "Циклическое планирование")
-        return pr1.getNumber() > pr2.getNumber();
+        return pr1.getNumber() > pr2.getNumber(); //Сравниваем порядковый номер процессов(pr1 пришёл позже pr2?)
     if(sorting == "Краткосрочное планирование" || sorting == "Наименьшее оставшееся время")
-        return pr1.getLength() > pr2.getLength();
+        return pr1.getLength() > pr2.getLength(); //Сравниваем время для обработки(размер процессов)
+    return pr1.getNumber() > pr2.getNumber();  //По умолчанию используем сравнение порядкового номера
 }
-void Queue::sort(){
-    for(int i = 1; i < (int)processes.size(); i++){
-            for(int j = i; j > 0 && greater(processes[j-1], processes[j]); j--){
+void Queue::sort(){//!Сортировка процессов в очереди
+    for(unsigned long long i = 1; i < processes.size(); i++){
+            for(unsigned long long j = i; j > 0 && greater(processes[j-1], processes[j]); j--){
                 Process tmp = processes[j-1];
                 processes[j-1] = processes[j];
                 processes[j] = tmp;
             }
     }
 }
-void Queue::addProcess(Process proc){
-    lastNumber++;
-    proc.setNumber(lastNumber);
-    processes.push_back(proc);
-    sort();
+void Queue::addProcess(Process proc){//!Добавление процесса в очередь
+    lastNumber++;   //Увеличиваем номер последнего процесса в очереди
+    proc.setNumber(lastNumber); //Присвоение номера полученному процессу
+    processes.push_back(proc);  //Добавляем процесс в массив всех процессов очереди
+    sort();                     //И сортируем массив
 }
-Process Queue::findProcess(){
-    Process proc = processes[0];
-    processes.erase(processes.begin());
-    return proc;
+Process Queue::findProcess(){//!Поиск первого процесса в очереди и его отправка на выполнение процессором
+    Process proc = processes[0];    //Запоминаем данные первого процесса
+    processes.erase(processes.begin()); //Удаляем его из массива всех процессов очереди
+    return proc;    //Отдаём его процессору
 }
-Process Queue::firstProcess(){
-    return processes[0];
+Process Queue::firstProcess(){  //!Просмотр первого процесса в очереди
+    return processes[0];        //Возвращает процесс с наибольшим приоритетом для анализа процессором
 }
-bool Queue::empty(){
+bool Queue::empty(){ //!Очередь пуста?
     return (processes.size() == 0);
 }
 
@@ -138,8 +139,24 @@ ExecutionBar::ExecutionBar(Queue *q, int aoriginX, int aoriginY,
     queue = q;
 }
 ExecutionBar::~ExecutionBar(){}
+void ExecutionBar::restart(){
+    processes.clear();
+    idletime = 0;
+    usetime = 0;
+    delaytime = 0;
+    endX = 0;
+}
 void ExecutionBar::drawLabel(){
-    painter->drawText(QRect(originX, originY - heightY - 30, lengthX, 30),"Выполняемые процессы",(QTextOption)Qt::AlignCenter);
+    int percent = usetime!=0 ? delaytime*100/(delaytime + usetime) : 0;
+    painter->drawText(QRect(originX, originY - heightY - 30, lengthX, 30),"Выполняемые процессы",static_cast<QTextOption>(Qt::AlignHCenter));
+    painter->drawText(QRect(originX, originY - heightY - 30, lengthX, 30),
+                      "Время всех переключений: " + QString::number(delaytime) + " (" +QString::number(percent) + "%) ",
+                      static_cast<QTextOption>(Qt::AlignLeft));
+    painter->drawText(QRect(originX + 250, originY - heightY - 30, lengthX - 100, 30),
+                      "Время работы процессора: " + QString::number(usetime),static_cast<QTextOption>(Qt::AlignLeft));
+    painter->drawText(QRect(originX, originY - heightY - 30, lengthX, 30),
+                      "Время ожидания процессора: " + QString::number(idletime),static_cast<QTextOption>(Qt::AlignRight));
+
     //painter->drawRect(originX, originY - heightY, lengthX, heightY);
 }
 void ExecutionBar::draw(){
@@ -155,52 +172,61 @@ void ExecutionBar::draw(){
         process.setX(process.getX() + margin);
     }
 }
-bool ExecutionBar::enough(){
-    auto last = processes.size()-1;
-    if(processes[last].getLength() >= processes[last].getStartLength())
-        return true;
-    if(alg == "Первым пришёл - первым обслужен" || alg == "Краткосрочное планирование"){}
-    if(alg == "Циклическое планирование"){
-        return processes[last].getLength() >= quantum;
+bool ExecutionBar::enough(){        //!Достаточно ли работать с текущим процессом?
+    auto last = processes.size()-1; //Записываем индекс текущего(последнего) процесса
+    if(processes[last].getLength() >= processes[last].getStartLength()) //Если обработан весь процесс
+        return true;                                                    //То работа с процессом завершена
+    if(alg == "Циклическое планирование"){              //Если выбрано циклическое планирование
+        return processes[last].getLength() >= quantum;  //И процесс уже отработал свой квант времени, то достаточно
     }
-    if(alg == "Наименьшее оставшееся время" && !queue->empty()){
-        int curlen = processes[last].getStartLength() - processes[last].getLength();
-        return (queue->firstProcess().getLength() < curlen);
+    if(alg == "Наименьшее оставшееся время" && !queue->empty()){    //Если выбрано "Наименьшее оставшееся время" и очередь не пуста
+        int curlen = processes[last].getStartLength() - processes[last].getLength();//Считаем оставшееся время текущего процесса
+        return (queue->firstProcess().getLength() < curlen);//Достаточно, если первый процесс в очереди короче оставшегося текущего
     }
-    return false;
+    return false;   //Иначе, если процесс ещё не завершён и нет повод для его прерывания, то продолжаем работу с ним
 }
-void ExecutionBar::update(int dx){
-    draw();
-    if(!waiting && (int)processes.size()>0){
-        auto last = processes.size()-1;
-        processes[last].setLength(processes[last].getLength()+dx);
-        if(enough()){//Изменить. Скорее всего отдельную функцию определения, когда next процесс
-            endX += processes[last].getLength();
-            if((alg == "Циклическое планирование" || alg == "Наименьшее оставшееся время") && processes[last].getLength() < processes[last].getStartLength()){
-                Process proc = processes[last];
-                proc.setLength(proc.getStartLength()-proc.getLength());
-                proc.setStartLength(proc.getLength());
-                queue->addProcess(proc);
-                processes[last].setStartLength(processes[last].getLength());
+void ExecutionBar::update(int dx){  //!Обновить область после шага работы процессора
+    draw(); //Отрисовать область для отображения работы процессора
+    if(!waiting && static_cast<int>(processes.size())>0){   //Если процессор обрабатывает процесс
+        auto last = processes.size()-1; //Записываем индекс текущего(последнего) процесса
+        processes[last].setLength(processes[last].getLength()+dx);  //Увеличиваем время работы с процессом(его размер отрисовки)
+        if(enough()){//Если с процессом нужно закончить работу
+            endX += processes[last].getLength();//Записываем, где кончился процесс, чтобы оттуда рисовать следующий
+            //Если выбран один из этих алгоритмов и процесс ещё не закончен, то вызвано его прерывание и нужно отправить его в очередь
+            if((alg == "Циклическое планирование" || alg == "Наименьшее оставшееся время") &&
+                    processes[last].getLength() < processes[last].getStartLength()){
+                Process proc = processes[last]; //Копируем недообработанный процесс
+                proc.setLength(proc.getStartLength()-proc.getLength()); //Считаем, сколько осталось обработать
+                proc.setStartLength(proc.getLength());      //Удаляем длину уже обработанной части
+                queue->addProcess(proc);                    //Отправляем в очередь оставшуюся часть процесса
+                processes[last].setStartLength(processes[last].getLength());//В панели выполненных оставляем уже обработанную часть
             }
-            requestForNext();
+            requestForNext();//Делаем запрос в очередь на обработку следующего процесса
         }
+        usetime++;//Увеличиваем время работы процессора
     }
-    else{
-        requestForNext();
+    else{   //Если процессор ожидает процесса
+        requestForNext();   //то делаем запрос на следующий процесс в очередь
     }
 }
 void ExecutionBar::requestForNext(){
     if(!queue->empty()){
-        clear();
-        Process nextPr = queue->findProcess();
-        nextPr.setX(originX + endX);
-        nextPr.setY(originY - heightY);
-        nextPr.setLength(0);
-        processes.push_back(nextPr);
-
-        waiting = false;
+        if(remainingDelay<=0){
+            clear();
+            Process nextPr = queue->findProcess();
+            nextPr.setX(originX + endX);
+            nextPr.setY(originY - heightY);
+            nextPr.setLength(0);
+            processes.push_back(nextPr);
+            waiting = false;
+            remainingDelay = delay;
+        }else{
+            remainingDelay--;
+            delaytime++;
+            waiting = true;
+        }
     }else{
+        idletime++;
         waiting = true;
         //if(processes.size()>0) Пропуски в отсутствие процессов
           //  endX += 1;
@@ -217,6 +243,7 @@ void ExecutionBar::clear(){
 void ExecutionBar::setSlider(int sl){ slider = sl; }
 void ExecutionBar::setAlg(QString a){ alg = a; }
 void ExecutionBar::setQuantum(int q){ quantum = q; }
+void ExecutionBar::setDelay(int d){ delay = d; }
 
 Graph::Graph(Queue *q, int aoriginX, int aoriginY,
              int alengthX, int aheightY, int astepY){
@@ -262,11 +289,9 @@ void Graph::sendToQueue(){//Удалить параметр
 void Graph::update(int dx){
     drawAxis();
     if(processes.size() > 0 && processes[0].getX()<originX - dx + 1){
-        //process.drawShadow();
         sendToQueue();//удалить параметр функции
     }
     for(auto &process: processes){
-
         process.setPainter(painter);
         process.move(dx,0);
         if(process.getX() + process.getLength() > originX + lengthX)
@@ -310,31 +335,27 @@ MainWindow::MainWindow(QWidget *parent) :
     bar = new ExecutionBar(queue);
     bar->setAlg(ui->algorithmBox->currentText());
     bar->setSlider(ui->barSlider->value());
-    bar->setQuantum(30);
+    bar->setQuantum(ui->quantSpin->value());
+    bar->setDelay(ui->delaySpin->value());
     //proc = new Process("П1", 1000, 120, 100);
     //update();
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerActivation()));
-    timer->start(20);
+    //timer->start(20);
 }
 
 void MainWindow::paintEvent(QPaintEvent *event){
     painter = new QPainter(this);
     bar->setPainter(painter);
     queue->setPainter(painter);
-
     graph->setPainter(painter);
-
-   // proc->setPainter(painter);
     int xzero = 11;
-    int yzero = 40;
+    int yzero = 45;
     int width = 1208;
-    int height = 525;
+    int height = 520;
     painter->fillRect(xzero,yzero,width,height, QBrush(QColor(255,255,255)));
     painter->setPen(Qt::black);
     if(timeFlag){
-        // proc->move(-1,0);
-
         queue->draw();
         bar->update(1);
          graph->update(-1);
@@ -348,10 +369,9 @@ void MainWindow::paintEvent(QPaintEvent *event){
         bar->draw();
         graph->draw();
     }
-
     painter->fillRect(0,0,xzero,height+yzero, QBrush(QColor("#f0f0f0")));
     painter->fillRect(xzero + width,0,xzero*5,height+yzero, QBrush(QColor("#f0f0f0")));
-        painter->fillRect(0,0,xzero*2 + width,yzero, QBrush(QColor("#f0f0f0")));
+    painter->fillRect(0,0,xzero*2 + width,yzero, QBrush(QColor("#f0f0f0")));
     painter->end();
 }
 
@@ -386,10 +406,13 @@ void MainWindow::on_speedSlider_valueChanged(int value)
 
 void MainWindow::on_startButton_clicked()
 {
-    if(timer->isActive())
+    if(timer->isActive()){
         timer->stop();
+        ui->startButton->setText("Старт");
+    }
     else {
         timer->start(ui->speedSlider->value());
+        ui->startButton->setText("Стоп");
     }
 }
 
@@ -405,7 +428,20 @@ void MainWindow::on_queueSlider_valueChanged(int value)
     this->update();
 }
 
-void MainWindow::on_spinBox_valueChanged(int arg1)
+void MainWindow::on_quantSpin_valueChanged(int arg1)
 {
     bar->setQuantum(arg1);
+}
+
+void MainWindow::on_delaySpin_valueChanged(int arg1)
+{
+    bar->setDelay(arg1);
+}
+
+void MainWindow::on_restartButton_clicked()
+{
+    graph->restart();
+    queue->restart();
+    bar->restart();
+    count = 0;
 }

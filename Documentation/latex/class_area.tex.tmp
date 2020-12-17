@@ -1,0 +1,116 @@
+\hypertarget{class_area}{}\doxysection{Area Class Reference}
+\label{class_area}\index{Area@{Area}}
+
+
+{\ttfamily \#include $<$mainwindow.\+h$>$}
+
+
+
+Inheritance diagram for Area\+:
+% FIG 0
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{class_area_a65e43d762471e18685e7e468c5113db1}{get\+OriginX}} ()
+\item 
+int \mbox{\hyperlink{class_area_a6f80645d26623c2fff85e9aab98f3e58}{get\+OriginY}} ()
+\item 
+int \mbox{\hyperlink{class_area_af767ed78d29a7e2e933028a6a9a7aec7}{get\+LengthX}} ()
+\item 
+int \mbox{\hyperlink{class_area_a1fde0b16ec900ec4bc5bc7d86a68dc41}{get\+HeightY}} ()
+\item 
+void \mbox{\hyperlink{class_area_a0cc73fae2ac67862eaf119c752341666}{set\+Painter}} (Q\+Painter $\ast$paint)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{class_area_aa8283809c98ccaaf63f1413a98274d54}{originX}}
+\item 
+int \mbox{\hyperlink{class_area_a4062d837faff647eedabf05f9376a552}{originY}}
+\item 
+int \mbox{\hyperlink{class_area_a55846c4c770d20cafa9cb9148ed39bef}{lengthX}}
+\item 
+int \mbox{\hyperlink{class_area_a8c9fb1391ef525cf50cdff150ab50a78}{heightY}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{class_process}{Process}} $>$ \mbox{\hyperlink{class_area_a3866d83b45a591879abbf98c7f78f526}{processes}}
+\item 
+Q\+Painter $\ast$ \mbox{\hyperlink{class_area_af8898a2c7cae34bf9d042d67a52d786d}{painter}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_area_a1fde0b16ec900ec4bc5bc7d86a68dc41}\label{class_area_a1fde0b16ec900ec4bc5bc7d86a68dc41}} 
+\index{Area@{Area}!getHeightY@{getHeightY}}
+\index{getHeightY@{getHeightY}!Area@{Area}}
+\doxysubsubsection{\texorpdfstring{getHeightY()}{getHeightY()}}
+{\footnotesize\ttfamily int Area\+::get\+HeightY (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_area_af767ed78d29a7e2e933028a6a9a7aec7}\label{class_area_af767ed78d29a7e2e933028a6a9a7aec7}} 
+\index{Area@{Area}!getLengthX@{getLengthX}}
+\index{getLengthX@{getLengthX}!Area@{Area}}
+\doxysubsubsection{\texorpdfstring{getLengthX()}{getLengthX()}}
+{\footnotesize\ttfamily int Area\+::get\+LengthX (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_area_a65e43d762471e18685e7e468c5113db1}\label{class_area_a65e43d762471e18685e7e468c5113db1}} 
+\index{Area@{Area}!getOriginX@{getOriginX}}
+\index{getOriginX@{getOriginX}!Area@{Area}}
+\doxysubsubsection{\texorpdfstring{getOriginX()}{getOriginX()}}
+{\footnotesize\ttfamily int Area\+::get\+OriginX (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_area_a6f80645d26623c2fff85e9aab98f3e58}\label{class_area_a6f80645d26623c2fff85e9aab98f3e58}} 
+\index{Area@{Area}!getOriginY@{getOriginY}}
+\index{getOriginY@{getOriginY}!Area@{Area}}
+\doxysubsubsection{\texorpdfstring{getOriginY()}{getOriginY()}}
+{\footnotesize\ttfamily int Area\+::get\+OriginY (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_area_a0cc73fae2ac67862eaf119c752341666}\label{class_area_a0cc73fae2ac67862eaf119c752341666}} 
+\index{Area@{Area}!setPainter@{setPainter}}
+\index{setPainter@{setPainter}!Area@{Area}}
+\doxysubsubsection{\texorpdfstring{setPainter()}{setPainter()}}
+{\footnotesize\ttfamily void Area\+::set\+Painter (\begin{DoxyParamCaption}\item[{Q\+Painter $\ast$}]{paint }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_area_a8c9fb1391ef525cf50cdff150ab50a78}\label{class_area_a8c9fb1391ef525cf50cdff150ab50a78}} 
+\index{Area@{Area}!heightY@{heightY}}
+\index{heightY@{heightY}!Area@{Area}}
+\doxysubsubsection{\texorpdfstring{heightY}{heightY}}
+{\footnotesize\ttfamily int Area\+::heightY\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_area_a55846c4c770d20cafa9cb9148ed39bef}\label{class_area_a55846c4c770d20cafa9cb9148ed39bef}} 
+\index{Area@{Area}!lengthX@{lengthX}}
+\index{lengthX@{lengthX}!Area@{Area}}
+\doxysubsubsection{\texorpdfstring{lengthX}{lengthX}}
+{\footnotesize\ttfamily int Area\+::lengthX\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_area_aa8283809c98ccaaf63f1413a98274d54}\label{class_area_aa8283809c98ccaaf63f1413a98274d54}} 
+\index{Area@{Area}!originX@{originX}}
+\index{originX@{originX}!Area@{Area}}
+\doxysubsubsection{\texorpdfstring{originX}{originX}}
+{\footnotesize\ttfamily int Area\+::originX\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_area_a4062d837faff647eedabf05f9376a552}\label{class_area_a4062d837faff647eedabf05f9376a552}} 
+\index{Area@{Area}!originY@{originY}}
+\index{originY@{originY}!Area@{Area}}
+\doxysubsubsection{\texorpdfstring{originY}{originY}}
+{\footnotesize\ttfamily int Area\+::originY\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_area_af8898a2c7cae34bf9d042d67a52d786d}\label{class_area_af8898a2c7cae34bf9d042d67a52d786d}} 
+\index{Area@{Area}!painter@{painter}}
+\index{painter@{painter}!Area@{Area}}
+\doxysubsubsection{\texorpdfstring{painter}{painter}}
+{\footnotesize\ttfamily Q\+Painter$\ast$ Area\+::painter\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_area_a3866d83b45a591879abbf98c7f78f526}\label{class_area_a3866d83b45a591879abbf98c7f78f526}} 
+\index{Area@{Area}!processes@{processes}}
+\index{processes@{processes}!Area@{Area}}
+\doxysubsubsection{\texorpdfstring{processes}{processes}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{class_process}{Process}}$>$ Area\+::processes\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Dimitriy/\+Documents/\+Algorithms\+\_\+of\+\_\+\+Planning/\mbox{\hyperlink{mainwindow_8h}{mainwindow.\+h}}\item 
+C\+:/\+Users/\+Dimitriy/\+Documents/\+Algorithms\+\_\+of\+\_\+\+Planning/\mbox{\hyperlink{mainwindow_8cpp}{mainwindow.\+cpp}}\end{DoxyCompactItemize}

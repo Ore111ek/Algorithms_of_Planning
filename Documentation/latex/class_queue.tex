@@ -1,0 +1,179 @@
+\hypertarget{class_queue}{}\doxysection{Класс Queue}
+\label{class_queue}\index{Queue@{Queue}}
+
+
+Граф наследования\+:Queue\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=163pt]{class_queue__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Граф связей класса Queue\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=163pt]{class_queue__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_queue_a6b2ba5952ba794408e4ae8a7cc1016a3}\label{class_queue_a6b2ba5952ba794408e4ae8a7cc1016a3}} 
+{\bfseries Queue} (int aoriginX=30, int aoriginY=460, int alengthX=385, int aheightY=400, int astepY=40)
+\item 
+\mbox{\Hypertarget{class_queue_adc5c94ffa0cbda77cf1213709ff50a1b}\label{class_queue_adc5c94ffa0cbda77cf1213709ff50a1b}} 
+void {\bfseries draw} ()
+\item 
+void \mbox{\hyperlink{class_queue_a8ab5ad7b7ca9d706ff9918fcd7357da8}{sort}} ()
+\item 
+bool \mbox{\hyperlink{class_queue_a76e251c2f6369620a476d04a52615fbb}{greater}} (\mbox{\hyperlink{class_process}{Process}} pr1, \mbox{\hyperlink{class_process}{Process}} pr2)
+\item 
+void \mbox{\hyperlink{class_queue_a5e88de8378fd90f993c2c1215aad3c8c}{add\+Process}} (\mbox{\hyperlink{class_process}{Process}} proc)
+\item 
+\mbox{\hyperlink{class_process}{Process}} \mbox{\hyperlink{class_queue_a586da90271f3e15dffa764ec294ab6da}{find\+Process}} ()
+\item 
+\mbox{\hyperlink{class_process}{Process}} \mbox{\hyperlink{class_queue_aa020833c76bcffcd9081a9f234fb6476}{first\+Process}} ()
+\item 
+bool \mbox{\hyperlink{class_queue_aab264a4e780a6c9ff85ad77aed805ffe}{empty}} ()
+\item 
+\mbox{\Hypertarget{class_queue_aa1ed95e7808ba628d7da8c53ad102449}\label{class_queue_aa1ed95e7808ba628d7da8c53ad102449}} 
+int {\bfseries get\+StepY} ()
+\item 
+\mbox{\Hypertarget{class_queue_afdda1d6f9549b76baece4b81f28efd01}\label{class_queue_afdda1d6f9549b76baece4b81f28efd01}} 
+void {\bfseries set\+StepY} (int step)
+\item 
+\mbox{\Hypertarget{class_queue_a4a1e60cacc66e59603dcbef9b92f84d8}\label{class_queue_a4a1e60cacc66e59603dcbef9b92f84d8}} 
+void {\bfseries set\+Slider} (int sl)
+\item 
+\mbox{\Hypertarget{class_queue_aeef3d1ac1300eeba553dc2095fb8ad4b}\label{class_queue_aeef3d1ac1300eeba553dc2095fb8ad4b}} 
+void {\bfseries set\+Sorting} (Q\+String \mbox{\hyperlink{class_queue_a8ab5ad7b7ca9d706ff9918fcd7357da8}{sort}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Закрытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_queue_a16edb4aaa8aa068bdf6f6f7a9ac6b4dd}\label{class_queue_a16edb4aaa8aa068bdf6f6f7a9ac6b4dd}} 
+void {\bfseries draw\+Label} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_queue_a1f18f273ff2edf3a1541937d4c332d70}\label{class_queue_a1f18f273ff2edf3a1541937d4c332d70}} 
+int {\bfseries stepY}
+\item 
+\mbox{\Hypertarget{class_queue_a1d6c8efcc5f78761403b46eace098db4}\label{class_queue_a1d6c8efcc5f78761403b46eace098db4}} 
+int {\bfseries last\+Number} = 0
+\item 
+\mbox{\Hypertarget{class_queue_a2f571c64f37d1d3c39efa600de5888f1}\label{class_queue_a2f571c64f37d1d3c39efa600de5888f1}} 
+int {\bfseries slider}
+\item 
+\mbox{\Hypertarget{class_queue_a703e44a49b1c433e44b8a5e542b14e0c}\label{class_queue_a703e44a49b1c433e44b8a5e542b14e0c}} 
+Q\+String {\bfseries sorting}
+\item 
+\mbox{\Hypertarget{class_queue_a82903b4a8b0db74e68d0ef44486fcbaf}\label{class_queue_a82903b4a8b0db74e68d0ef44486fcbaf}} 
+bool {\bfseries waiting} = true
+\end{DoxyCompactItemize}
+\doxysubsection*{Дополнительные унаследованные члены}
+
+
+\doxysubsection{Методы}
+\mbox{\Hypertarget{class_queue_a5e88de8378fd90f993c2c1215aad3c8c}\label{class_queue_a5e88de8378fd90f993c2c1215aad3c8c}} 
+\index{Queue@{Queue}!addProcess@{addProcess}}
+\index{addProcess@{addProcess}!Queue@{Queue}}
+\doxysubsubsection{\texorpdfstring{addProcess()}{addProcess()}}
+{\footnotesize\ttfamily void Queue\+::add\+Process (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_process}{Process}}}]{proc }\end{DoxyParamCaption})}
+
+Добавление процесса в очередьГраф вызовов\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_queue_a5e88de8378fd90f993c2c1215aad3c8c_cgraph}
+\end{center}
+\end{figure}
+Граф вызова функции\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=329pt]{class_queue_a5e88de8378fd90f993c2c1215aad3c8c_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_queue_aab264a4e780a6c9ff85ad77aed805ffe}\label{class_queue_aab264a4e780a6c9ff85ad77aed805ffe}} 
+\index{Queue@{Queue}!empty@{empty}}
+\index{empty@{empty}!Queue@{Queue}}
+\doxysubsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily bool Queue\+::empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Очередь пуста?Граф вызова функции\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_queue_aab264a4e780a6c9ff85ad77aed805ffe_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_queue_a586da90271f3e15dffa764ec294ab6da}\label{class_queue_a586da90271f3e15dffa764ec294ab6da}} 
+\index{Queue@{Queue}!findProcess@{findProcess}}
+\index{findProcess@{findProcess}!Queue@{Queue}}
+\doxysubsubsection{\texorpdfstring{findProcess()}{findProcess()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_process}{Process}} Queue\+::find\+Process (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Поиск первого процесса в очереди и его отправка на выполнение процессором\mbox{\Hypertarget{class_queue_aa020833c76bcffcd9081a9f234fb6476}\label{class_queue_aa020833c76bcffcd9081a9f234fb6476}} 
+\index{Queue@{Queue}!firstProcess@{firstProcess}}
+\index{firstProcess@{firstProcess}!Queue@{Queue}}
+\doxysubsubsection{\texorpdfstring{firstProcess()}{firstProcess()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_process}{Process}} Queue\+::first\+Process (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Просмотр первого процесса в очередиГраф вызова функции\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_queue_aa020833c76bcffcd9081a9f234fb6476_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_queue_a76e251c2f6369620a476d04a52615fbb}\label{class_queue_a76e251c2f6369620a476d04a52615fbb}} 
+\index{Queue@{Queue}!greater@{greater}}
+\index{greater@{greater}!Queue@{Queue}}
+\doxysubsubsection{\texorpdfstring{greater()}{greater()}}
+{\footnotesize\ttfamily bool Queue\+::greater (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_process}{Process}}}]{pr1,  }\item[{\mbox{\hyperlink{class_process}{Process}}}]{pr2 }\end{DoxyParamCaption})}
+
+Операция сравнения в зависимости от алгоритмаГраф вызова функции\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_queue_a76e251c2f6369620a476d04a52615fbb_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_queue_a8ab5ad7b7ca9d706ff9918fcd7357da8}\label{class_queue_a8ab5ad7b7ca9d706ff9918fcd7357da8}} 
+\index{Queue@{Queue}!sort@{sort}}
+\index{sort@{sort}!Queue@{Queue}}
+\doxysubsubsection{\texorpdfstring{sort()}{sort()}}
+{\footnotesize\ttfamily void Queue\+::sort (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Сортировка процессов в очередиГраф вызовов\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=265pt]{class_queue_a8ab5ad7b7ca9d706ff9918fcd7357da8_cgraph}
+\end{center}
+\end{figure}
+Граф вызова функции\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_queue_a8ab5ad7b7ca9d706ff9918fcd7357da8_icgraph}
+\end{center}
+\end{figure}
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Dimitriy/\+Documents/\+Algorithms\+\_\+of\+\_\+\+Planning/mainwindow.\+h\item 
+C\+:/\+Users/\+Dimitriy/\+Documents/\+Algorithms\+\_\+of\+\_\+\+Planning/mainwindow.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,12 @@
+digraph "Queue::greater"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="Queue::greater",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="Process::getLength",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_process.html#ab0f9faf8a0ca6a52172af89e64c76787",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="Process::getNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_process.html#a5f781fe7313c21e4212f24339a03817c",tooltip=" "];
+}
