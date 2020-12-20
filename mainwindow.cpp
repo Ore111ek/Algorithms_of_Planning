@@ -40,6 +40,7 @@ int Process::getHeight(){ return height; }
 QString Process::getName(){ return name; }
 int Process::getNumber(){ return number; }
 QColor Process::getColor(){ return color; }
+unsigned long long Process::getStart(){ return start; };
 
 void Process::setX(int ax){ x = ax; }
 void Process::setY(int ay){ y = ay; }
@@ -48,6 +49,7 @@ void Process::setPainter(QPainter *paint){ painter = paint; }
 void Process::setNumber(int num){ number = num; }
 void Process::setColor(QColor col){ color = col; }
 void Process::setStartLength(int len){ startlength = len; }
+void Process::setStart(unsigned long long t){ start = t; }
 
 void Area::restart(){
     processes.clear();
@@ -148,14 +150,17 @@ void ExecutionBar::restart(){
 }
 void ExecutionBar::drawLabel(){
     int percent = usetime!=0 ? delaytime*100/(delaytime + usetime) : 0;
-    painter->drawText(QRect(originX, originY - heightY - 30, lengthX, 30),"Выполняемые процессы",static_cast<QTextOption>(Qt::AlignHCenter));
-    painter->drawText(QRect(originX, originY - heightY - 30, lengthX, 30),
+    unsigned long long turn = count!=0 ? turnaround/static_cast<unsigned long long>(count) : 0;
+    //painter->drawText(QRect(originX, originY - heightY - 30, lengthX, 30),"Выполняемые процессы",static_cast<QTextOption>(Qt::AlignHCenter));
+    painter->drawText(QRect(originX, originY - heightY - 25, lengthX, 30),
                       "Время всех переключений: " + QString::number(delaytime) + " (" +QString::number(percent) + "%) ",
                       static_cast<QTextOption>(Qt::AlignLeft));
-    painter->drawText(QRect(originX + 250, originY - heightY - 30, lengthX - 100, 30),
+    painter->drawText(QRect(originX + 250, originY - heightY - 25, lengthX - 100, 30),
                       "Время работы процессора: " + QString::number(usetime),static_cast<QTextOption>(Qt::AlignLeft));
-    painter->drawText(QRect(originX, originY - heightY - 30, lengthX, 30),
-                      "Время ожидания процессора: " + QString::number(idletime),static_cast<QTextOption>(Qt::AlignRight));
+    //painter->drawText(QRect(originX, originY - heightY - 30, lengthX, 30),
+    //                  "Время ожидания процессора: " + QString::number(idletime),static_cast<QTextOption>(Qt::AlignRight));
+    painter->drawText(QRect(originX, originY - heightY - 25, lengthX, 30),
+                      "Оборотное время: " + QString::number(turn),static_cast<QTextOption>(Qt::AlignRight));
 
     //painter->drawRect(originX, originY - heightY, lengthX, heightY);
 }
@@ -168,6 +173,18 @@ void ExecutionBar::draw(){
             process.setPainter(painter);
             process.drawShadow();
             process.draw();
+            //if(process.getStart()!=0 && (process.getX()+margin<endX || waiting))
+            QPoint cur = QCursor::pos() - window->pos();
+            if(cur.x() > process.getX() && cur.x() < process.getX() + process.getLength() && cur.y() > 540 && cur.y() < 600
+                    && (process.getX()+margin<endX || waiting)){
+                if(process.getStart()!=0){
+                    painter->drawText(QRect(process.getX()-5, process.getY()+30, process.getLength()+400, 30),
+                                      QString::number(process.getStart()) + " мс от попадания в очередь до окончания выполнения",static_cast<QTextOption>(Qt::AlignLeft));}
+                else {
+                    painter->drawText(QRect(process.getX()-5, process.getY()+30, process.getLength()+200, 30),
+                                   "процесс не завершён",static_cast<QTextOption>(Qt::AlignLeft));
+                }
+            }
         }
         process.setX(process.getX() + margin);
     }
@@ -186,11 +203,14 @@ bool ExecutionBar::enough(){        //!Достаточно ли работат�
     return false;   //Иначе, если процесс ещё не завершён и нет повод для его прерывания, то продолжаем работу с ним
 }
 void ExecutionBar::update(int dx){  //!Обновить область после шага работы процессора
+    time++;
     draw(); //Отрисовать область для отображения работы процессора
     if(!waiting && static_cast<int>(processes.size())>0){   //Если процессор обрабатывает процесс
         auto last = processes.size()-1; //Записываем индекс текущего(последнего) процесса
         processes[last].setLength(processes[last].getLength()+dx);  //Увеличиваем время работы с процессом(его размер отрисовки)
         if(enough()){//Если с процессом нужно закончить работу
+            //turnaround += time - processes[last].getStart();
+
             endX += processes[last].getLength();//Записываем, где кончился процесс, чтобы оттуда рисовать следующий
             //Если выбран один из этих алгоритмов и процесс ещё не закончен, то вызвано его прерывание и нужно отправить его в очередь
             if((alg == "Циклическое планирование" || alg == "Наименьшее оставшееся время") &&
@@ -200,6 +220,12 @@ void ExecutionBar::update(int dx){  //!Обновить область посл�
                 proc.setStartLength(proc.getLength());      //Удаляем длину уже обработанной части
                 queue->addProcess(proc);                    //Отправляем в очередь оставшуюся часть процесса
                 processes[last].setStartLength(processes[last].getLength());//В панели выполненных оставляем уже обработанную часть
+                processes[last].setStart(0);
+            }
+            else{
+                processes[last].setStart(time - processes[last].getStart());
+                turnaround += processes[last].getStart();
+                count++;
             }
             requestForNext();//Делаем запрос в очередь на обработку следующего процесса
         }
@@ -228,14 +254,14 @@ void ExecutionBar::requestForNext(){
     }else{
         idletime++;
         waiting = true;
-        //if(processes.size()>0) Пропуски в отсутствие процессов
+        //if(processes.size()>0) //Пропуски в отсутствие процессов
           //  endX += 1;
     }
 }
 void ExecutionBar::clear(){
-    if(processes.size()>99){
+    if(processes.size()>199){
         endX = 0;
-        for(int i = 99; i > -1; i--){
+        for(int i = 199; i > -1; i--){
             processes.erase(processes.begin() + i);
         }
     }
@@ -244,6 +270,7 @@ void ExecutionBar::setSlider(int sl){ slider = sl; }
 void ExecutionBar::setAlg(QString a){ alg = a; }
 void ExecutionBar::setQuantum(int q){ quantum = q; }
 void ExecutionBar::setDelay(int d){ delay = d; }
+void ExecutionBar::setWindow(QMainWindow *w){ window = w; }
 
 Graph::Graph(Queue *q, int aoriginX, int aoriginY,
              int alengthX, int aheightY, int astepY){
@@ -281,15 +308,17 @@ void Graph::draw(){
     }
 }
 
-void Graph::sendToQueue(){//Удалить параметр
+void Graph::sendToQueue(){
     queue->addProcess(processes[0]);
     processes.erase(processes.begin());
 }
 
 void Graph::update(int dx){
+    time++;
     drawAxis();
     if(processes.size() > 0 && processes[0].getX()<originX - dx + 1){
-        sendToQueue();//удалить параметр функции
+        processes[0].setStart(time);        //Записываем премя прихода
+        sendToQueue();
     }
     for(auto &process: processes){
         process.setPainter(painter);
@@ -337,6 +366,7 @@ MainWindow::MainWindow(QWidget *parent) :
     bar->setSlider(ui->barSlider->value());
     bar->setQuantum(ui->quantSpin->value());
     bar->setDelay(ui->delaySpin->value());
+    bar->setWindow(this);
     //proc = new Process("П1", 1000, 120, 100);
     //update();
     timer = new QTimer();

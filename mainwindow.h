@@ -27,6 +27,7 @@ class Process{
     QString getName();
     int getNumber();
     QColor getColor();
+    unsigned long long getStart();
 
     void setX(int ax);
     void setY(int ay);
@@ -35,6 +36,7 @@ class Process{
     void setNumber(int num);
     void setColor(QColor col);
     void setStartLength(int len);
+    void setStart(unsigned long long t);
   private:
     int x, y;
     int length;
@@ -44,6 +46,7 @@ class Process{
     QString name;
     QColor color;
     QPainter *painter;
+    unsigned long long start = 0;
 };
 
 class Area{
@@ -66,7 +69,7 @@ protected:
 class Queue : public Area{
 public:
   Queue(int aoriginX = 30, int aoriginY = 460,
-          int alengthX = 385, int aheightY = 400, int astepY = 40);
+          int alengthX = 385, int aheightY = 395, int astepY = 40);
   ~Queue();
 
   void draw();
@@ -95,7 +98,7 @@ private:
 class Graph : public Area{
 public:
   Graph(Queue *q, int aoriginX = 450, int aoriginY = 460,
-          int alengthX = 740, int aheightY = 400, int astepY = 40);
+          int alengthX = 740, int aheightY = 395, int astepY = 40);
   ~Graph();
   void draw();
   void update(int dx);
@@ -109,11 +112,12 @@ private:
   void drawAxis();
   int stepY;
   Queue *queue;
+  unsigned long long time = 0;
 };
 
 class ExecutionBar : public Area{
 public:
-    ExecutionBar(Queue *q, int aoriginX = 30, int aoriginY = 550,
+    ExecutionBar(Queue *q, int aoriginX = 30, int aoriginY = 545,
             int alengthX = 1170, int aheightY = 50);
     ~ExecutionBar();
 
@@ -127,9 +131,10 @@ public:
     void setAlg(QString a);
     void setQuantum(int q);
     void setDelay(int d);
+    void setWindow(QMainWindow *w);
 private:
     void drawLabel();
-
+    QMainWindow *window;
     Queue *queue;
     int slider;
     QString alg;
@@ -143,6 +148,10 @@ private:
     int usetime = 0;
     int idletime = 0;
     int delaytime = 0;
+
+    unsigned long long time = 0;
+    unsigned long long turnaround = 0;
+    int count = 0;
 };
 
 namespace Ui {
@@ -186,6 +195,7 @@ private:
     QPainter *painter;
     bool timeFlag = false;
     long long count = 0;
+    unsigned long long time = 0;
 };
 
 #endif // MAINWINDOW_H
